@@ -1,0 +1,4 @@
+stages:
+  - build backend
+  - containerize backend
+  - containerize frontend
