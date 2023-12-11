@@ -7,7 +7,7 @@ cache:
     - $GOPATH/bin
 
 before_script:
-  - docker -u $GHCR_USERNAME -p $GHCR_PASSWORD $GHCR_REGISTRY
+  - docker login -u $GHCR_USERNAME -p $GHCR_PASSWORD $GHCR_REGISTRY
 
 jobs:
   include:
