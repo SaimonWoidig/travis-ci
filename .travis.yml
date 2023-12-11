@@ -17,11 +17,11 @@ jobs:
         - cd backend
         - go mod download
         - go build -v -ldflags "-v -s -w -extldflags '-static'" -tags "osusergo,netgo" -trimpath -o dist/backend
-        - docker build -f docker/Dockerfile -t $GHCR_REGISTRY/backend:1.0.0
+        - docker build -f docker/Dockerfile -t $GHCR_REGISTRY/backend:1.0.0 .
         - docker push $GHCR_REGISTRY/backend:1.0.0
     - name: Containerize frontend
       stage: frontend
       script:
         - cd frontend
-        - docker build -f docker/Dockerfile -t ghcr.io/saimonwoidig/travis-ci/frontend:1.0.0
+        - docker build -f docker/Dockerfile -t ghcr.io/saimonwoidig/travis-ci/frontend:1.0.0 .
         - docker push $GHCR_REGISTRY/frontend:1.0.0
