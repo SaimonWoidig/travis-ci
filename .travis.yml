@@ -1,4 +1,27 @@
-stages:
-  - build backend
-  - containerize backend
-  - containerize frontend
+language: golang
+go: "1.21.5"
+
+cache:
+  directories:
+    - $GOPATH/pkg/mod
+    - $GOPATH/bin
+
+before_script:
+  - docker -u $GHCR_USERNAME -p $GHCR_PASSWORD $GHCR_REGISTRY
+
+jobs:
+  include:
+    - name: Build and containerize backend
+      stage: backend
+      script:
+        - cd backend
+        - go mod download
+        - go build -v -ldflags "-v -s -w -extldflags '-static'" -tags "osusergo,netgo" -trimpath -o dist/backend
+        - docker build -f docker/Dockerfile -t $GHCR_REGISTRY/backend:1.0.0
+        - docker push $GHCR_REGISTRY/backend:1.0.0
+    - name: Containerize frontend
+      stage: frontend
+      script:
+        - cd frontend
+        - docker build -f docker/Dockerfile -t ghcr.io/saimonwoidig/travis-ci/frontend:1.0.0
+        - docker push $GHCR_REGISTRY/frontend:1.0.0
